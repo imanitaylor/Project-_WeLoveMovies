@@ -5,19 +5,11 @@ exports.up = function(knex) {
     table.string("title");
     table.integer("runtime_in_minutes");
     table.string("rating");
-    table.text("dscription");
+    table.text("description");
     table.string("image_url");
     table.timestamps(true, true);
   })
 };
-
-
-// `movie_id`: (Primary Key) A unique ID for the movie.
-// - `title`: (String) The title of the movie.
-// - `runtime_in_minutes`: (Integer) The length of the movie in minutes.
-// - `rating`: (String) The rating given to the movie.
-// - `description`: (Text) A shortened description of the movie.
-// - `image_url`: (String) A URL to the movie's poster.
 
 exports.down = function(knex) {
   return knex.schema.dropTable("movies");

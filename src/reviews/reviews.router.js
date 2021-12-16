@@ -7,6 +7,6 @@ const methodNotAllowed = require("../errors/methodNotAllowed");
 // UPDATE /reviews/:reviewId
 // UPDATE /reviews/:reviewId (incorrect ID)
 
-
+router.route("/:reviewId").delete(controller.delete).all(methodNotAllowed);
 
 module.exports = router;

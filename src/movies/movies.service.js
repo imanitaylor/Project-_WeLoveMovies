@@ -1,4 +1,16 @@
 const knex = require("../db/connection");
+const mapProperties = require("../utils/map-properties");
+
+const addCritic = mapProperties({
+     
+        critic_id: "critic.critic_id",
+        preferred_name: "critic.preferred_name",
+        surname: "critic.surname",
+        organization_name: "critic.organization_name",
+        created_at: "critic.created_at",
+        updated_at: "critic.updated_at",
+    
+});
 
 //GET request to /movies
 //grab all movies from the table and only display the following columns
@@ -19,9 +31,39 @@ function listShowingMovies(){
     }
 
 
+function read(movieId){
+    return knex("movies")
+    .where({ movie_id : movieId })
+    .first();
+}
+
+function readTheaters(movieId){
+    return knex("movies as m")
+    .where({ "m.movie_id" : movieId })
+    .join("movies_theaters as mt","m.movie_id","mt.movie_id")
+    .join("theaters as t","mt.theater_id","t.theater_id")
+    .select("t.*","m.movie_id")
+}
+
+
+function readReviews(movieId){
+    return knex("reviews as r")
+    .join("critics as c","r.critic_id","c.critic_id")
+    .select("r.review_id","r.content","r.score","r.created_at","r.updated_at","r.critic_id","r.movie_id","c.*", )
+    .where({ "r.movie_id" : movieId })
+    .then((res) => res.map(addCritic));
+}
+
+
+
+
+
 
 
 module.exports = {
     list,
     listShowingMovies,
+    read,
+    readTheaters,
+    readReviews,
 }

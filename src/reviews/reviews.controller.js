@@ -13,8 +13,19 @@ async function reviewExists(req, res, next) {
   }
 
   
+  async function update(req, res) {
+    const updatedReview = {
+      ...req.body.data,
+      review_id: res.locals.review.review_id,
+    };
+    await service.update(updatedReview);
+    const newData = await service.addCriticCategory(updatedReview.review_id);
+    res.json({ data: newData });
+  }
+
+
+
   async function destroy(req, res) {
-    // your solution here
     const { review } = res.locals;
     await service.delete(review.review_id);
     res.sendStatus(204);
@@ -23,5 +34,6 @@ async function reviewExists(req, res, next) {
 
 module.exports = {
   delete: [asyncErrorBoundary(reviewExists), asyncErrorBoundary(destroy)],
-    
+  update: [asyncErrorBoundary(reviewExists), asyncErrorBoundary(update)],
+  
 }
